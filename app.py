@@ -22,7 +22,7 @@ except:
 st.subheader("Transcriptor gratuito")
 st.write('Transcribe tus libros con nuestro sistema de transcripcion gratuito')
            
-st.markdown(f"Quieres escucharlo?, copia el texto")
+st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
 
 texto = st.text_input('Cuentanos como te ha parecido tu experiencia')
