@@ -20,7 +20,7 @@ except:
     pass
 
 st.subheader("Una pequeña Fábula.")
-st.write('Bienvenidx al transcriptor de libros online. En este sitio podràs transcribir tanto los libros de tu preferencia como documentos academicos de forma facil y rapida.
+st.write(' Bienvenidx al transcriptor de libros online. En este sitio podràs transcribir tanto los libros de tu preferencia como documentos academicos de forma facil y rapida.
 Optimiza tus estudios y crece con nosotros')
            
 st.markdown(f"Quieres escucharlo?, copia el texto")
