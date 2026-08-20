@@ -20,7 +20,8 @@ except:
     pass
 
 st.subheader("Una pequeña Fábula.")
-st.write('Transcribe tus libros con nuestro sistema de transcripciòn gratuito', 'hola')
+st.write('Transcribe tus libros con nuestro sistema de transcripcion gratuito', 
+         'hola')
            
 st.markdown(f"Quieres escucharlo?, copia el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
