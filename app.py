@@ -46,7 +46,7 @@ with col3:
 st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
 
-texto = st.text_input('Cuentanos como te ha parecido tu experiencia')
+texto = st.text_input('Comentarios')
 st.write('Cometarios:', texto)
 
 tld='com'
