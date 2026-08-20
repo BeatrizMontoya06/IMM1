@@ -39,7 +39,7 @@ with col3:
     if modo == 'Excelente':
         st.write('Gracias por su comentario')
     if modo == 'Moderada':
-        st.write == ('Gracias por su comentario')
+        st.write('Gracias por su comentario')
     if modo == 'Pesima':
         st.write('Grcias por su comentario')
            
