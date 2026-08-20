@@ -11,7 +11,7 @@ st.title("Transcriptor de libros (Texto a voz)")
 image = Image.open('images.jpeg')
 st.image(image, width=350)
 with st.sidebar:
-    st.subheader("Esrcibe y/o selecciona texto para ser escuchado.")
+    st.subheader("Esrcibe y/o selecciona texto del libro para poder escucharlo.")
 
 
 try:
