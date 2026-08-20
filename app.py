@@ -22,7 +22,7 @@ except:
 st.subheader("Transcriptor gratuito")
 st.write('Transcribe tus libros con nuestro sistema de transcripcion gratuito')
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 with col1:
     st.subheader("Quienes somos")
     st.write("Somos un grupo dedicado a facilitarte la transcripcion de texto o articulos academos para que puedas optimizar tu tiempo.")
@@ -32,6 +32,16 @@ with col2:
     st.write("Hay riesgo de adquirir un malware en la descarga: No.")
     st.write("Puedo publicar cualquier texto: Si.")
     st.write("Esta disponible para cualquier dispositivo: Si.")
+
+with col3:
+    st.subheader("Cuentanos tu experiencia")
+    modo = st.radio("Responde", ('Excelente', 'Moderada', 'Pesima'))
+    if modo == 'Excelente':
+        st.write('Gracias por su comentario')
+    if modo == 'Moderada':
+        st.write == ('Gracias por su comentario')
+    if modo == 'Pesima':
+        st.write('Grcias por su comentario')
            
 st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
