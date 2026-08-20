@@ -25,7 +25,12 @@ st.write('Transcribe tus libros con nuestro sistema de transcripcion gratuito')
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("Quienes somos")
-    st.write("Somos un grupo dedicado a facilitarte la transcripcion de texto o articulos academos para que puedas optimizar tu tiempo")
+    st.write("Somos un grupo dedicado a facilitarte la transcripcion de texto o articulos academos para que puedas optimizar tu tiempo.")
+
+with col2:
+    st.subheader("Preguntas frecuentes")
+    st.writer("Hay riesgo de adquirir un malware en la descarga: No.")
+    st.writer("Puedo publicar cualquier texto: Si.")
            
 st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
