@@ -21,6 +21,11 @@ except:
 
 st.subheader("Transcriptor gratuito")
 st.write('Transcribe tus libros con nuestro sistema de transcripcion gratuito')
+
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("Quienes somos")
+    st.write("Somos un grupo dedicado a facilitarte la transcripcion de texto o articulos academos para que puedas optimizar tu tiempo")
            
 st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
