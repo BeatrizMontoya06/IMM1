@@ -21,9 +21,7 @@ except:
 
 st.subheader("Una pequeña Fábula.")
 st.write('Bienvenidx al transcriptor de libros online. En este sitio podràs transcribir tanto los libros de tu preferencia como documentos academicos de forma facil y rapida.
-Optimiza tus estudios y crece con nosotros.'
-        
-        )
+Optimiza tus estudios y crece con nosotros.')
            
 st.markdown(f"Quieres escucharlo?, copia el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
