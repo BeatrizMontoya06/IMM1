@@ -29,8 +29,8 @@ with col1:
 
 with col2:
     st.subheader("Preguntas frecuentes")
-    st.writer("Hay riesgo de adquirir un malware en la descarga: No.")
-    st.writer("Puedo publicar cualquier texto: Si.")
+    st.write("Hay riesgo de adquirir un malware en la descarga: No.")
+    st.write("Puedo publicar cualquier texto: Si.")
            
 st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
