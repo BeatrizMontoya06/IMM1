@@ -41,7 +41,7 @@ with col3:
     if modo == 'Moderada':
         st.write('Gracias por su comentario')
     if modo == 'Pesima':
-        st.write('Grcias por su comentario')
+        st.write('Gracias por su comentario')
            
 st.markdown(f"Ingresa el texto")
 text = st.text_area("Ingrese El texto a escuchar.")
