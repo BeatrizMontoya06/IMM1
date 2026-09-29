@@ -1,6 +1,5 @@
 import streamlit as st
 
-# Configuración de página de Streamlit
 st.set_page_config(
     page_title="Bee's To Speech v2.0 - Retro Y2K",
     page_icon="🐝",
@@ -8,17 +7,16 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Renderizado de la aplicación HTML/JS/CSS Y2K completa
 y2k_html_code = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐝 Bee's To Speech v2.0 - Retro Web Edition 🐝</title>
+    <title>🐝 Bee's To Speech v2.0 - Fix Edition 🐝</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&family=MS+Sans+Serif&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
         body {
             background-color: #008080;
@@ -26,7 +24,7 @@ y2k_html_code = """
                 radial-gradient(#40e0d0 15%, transparent 16%),
                 radial-gradient(#004040 15%, transparent 16%);
             background-size: 16px 16px;
-            font-family: 'MS Sans Serif', Tahoma, sans-serif;
+            font-family: Tahoma, 'MS Sans Serif', sans-serif;
             margin: 0;
             padding: 10px;
             color: #000;
@@ -53,19 +51,6 @@ y2k_html_code = """
             align-items: center;
         }
 
-        .title-bar-buttons button {
-            width: 16px;
-            height: 14px;
-            font-size: 9px;
-            line-height: 10px;
-            padding: 0;
-            margin-left: 2px;
-            background: #c0c0c0;
-            border: 1px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            cursor: pointer;
-        }
-
         marquee {
             background: #000;
             color: #00ff00;
@@ -74,10 +59,6 @@ y2k_html_code = """
             padding: 4px;
             border: 2px inset #808080;
             margin: 8px 0;
-        }
-
-        .window-body {
-            padding: 10px;
         }
 
         .retro-card {
@@ -118,7 +99,6 @@ y2k_html_code = """
             padding: 6px 12px;
             font-weight: bold;
             cursor: pointer;
-            font-family: sans-serif;
             font-size: 12px;
         }
 
@@ -130,14 +110,13 @@ y2k_html_code = """
         .btn-success { background: #00ff66; }
         .btn-danger { background: #ff4d4d; color: white; }
 
-        .counter-box {
-            background: #000;
-            color: #ff0000;
-            font-family: 'VT323', monospace;
-            font-size: 20px;
-            padding: 2px 8px;
-            display: inline-block;
+        .status-box {
+            background: #fff;
             border: 2px inset #808080;
+            padding: 5px;
+            font-size: 11px;
+            color: #333;
+            margin-top: 5px;
         }
 
         .grid-2 {
@@ -156,26 +135,18 @@ y2k_html_code = """
 <div class="y2k-container">
     <div class="title-bar">
         <span>🐝 C:\\BEES_TO_SPEECH\\v2.0\\APP.EXE</span>
-        <div class="title-bar-buttons">
-            <button>_</button>
-            <button>□</button>
-            <button>✕</button>
-        </div>
     </div>
 
     <marquee scrollamount="5">
-        *** BIENVENIDO A BEE'S TO SPEECH WEB 2.0 *** LA MEJOR EXPERIENCIA DE TEXTO A VOZ DEL MILENIO *** CONVIERTE TUS PDFS A AUDIO AL INSTANTE ***
+        *** BIENVENIDO A BEE'S TO SPEECH WEB 2.0 *** SI LAS VOCES NO APARECEN, HAZ CLIC EN 'CARGAR VOCES' ***
     </marquee>
 
     <div class="window-body">
-        <!-- Contexto Y2K -->
+        <!-- Contexto -->
         <div class="retro-card">
-            <h2>ℹ️️ SOBRE LA PLATAFORMA (SYSTEM INFO)</h2>
+            <h2>ℹ SOBRE LA PLATAFORMA (SYSTEM INFO)</h2>
             <p style="font-size: 12px; margin: 5px 0;">
-                <b>Bee's To Speech v2.0</b> es un sistema avanzado de síntesis de voz diseñado para procesar archivos PDF y texto plano directamente desde tu navegador. Ajusta el tono, selecciona entre múltiples frecuencias/voces y descarga el archivo de audio simulado.
-            </p>
-            <p style="font-size: 11px;">
-                Visitas totales: <span class="counter-box">004289</span> | Estado del servidor: <span style="color: green; font-weight: bold;">ONLINE</span>
+                <b>Bee's To Speech v2.0</b> es un sistema de síntesis de voz para archivos PDF y texto plano.
             </p>
         </div>
 
@@ -186,7 +157,7 @@ y2k_html_code = """
             <input type="file" id="pdfInput" accept="application/pdf"><br><br>
 
             <label style="font-size: 12px;"><b>2. Editor de Texto a Procesar:</b></label>
-            <textarea id="textInput" rows="6" placeholder="Escribe tu texto o sube un PDF..."></textarea>
+            <textarea id="textInput" rows="5" placeholder="Escribe tu texto o sube un PDF..."></textarea>
         </div>
 
         <!-- Controles de Voz -->
@@ -205,8 +176,18 @@ y2k_html_code = """
 
                 <div>
                     <label style="font-size: 11px;"><b>Seleccionar Voz:</b></label>
-                    <select id="voiceSelect"><option>Cargando voces del sistema...</option></select>
+                    <select id="voiceSelect">
+                        <option value="">Buscando voces del sistema...</option>
+                    </select>
                 </div>
+            </div>
+
+            <div style="margin-top: 8px;">
+                <button class="y2k-btn" onclick="initVoices()">🔄 RECARGAR/FORZAR VOCES</button>
+            </div>
+
+            <div class="status-box" id="statusBox">
+                Estado: Esperando interacción con el usuario...
             </div>
 
             <br>
@@ -238,15 +219,62 @@ y2k_html_code = """
 
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    const synth = window.speechSynthesis;
+    
+    let synth = window.speechSynthesis;
     let allVoices = [];
 
-    function populateVoices() {
+    function updateStatus(msg) {
+        document.getElementById('statusBox').innerText = "Estado: " + msg;
+    }
+
+    function initVoices() {
+        if (!('speechSynthesis' in window)) {
+            updateStatus("Tu navegador NO soporta la API de lectura de voz (SpeechSynthesis).");
+            return;
+        }
+
         allVoices = synth.getVoices();
-        filterVoices();
+
+        if (allVoices.length === 0) {
+            updateStatus("Cargando voces...");
+            // Reintento continuo para navegadores como Chrome/Edge
+            let attempts = 0;
+            let interval = setInterval(() => {
+                allVoices = synth.getVoices();
+                attempts++;
+                if (allVoices.length > 0) {
+                    clearInterval(interval);
+                    filterVoices();
+                    updateStatus("Se encontraron " + allVoices.length + " voces en el sistema.");
+                } else if (attempts > 10) {
+                    clearInterval(interval);
+                    updateStatus("No se detectaron voces locales. Se usarán voces por defecto del navegador al dar clic en Reproducir.");
+                    setupFallbackOptions();
+                }
+            }, 300);
+        } else {
+            filterVoices();
+            updateStatus("Se encontraron " + allVoices.length + " voces en el sistema.");
+        }
+    }
+
+    function setupFallbackOptions() {
+        const select = document.getElementById('voiceSelect');
+        select.innerHTML = '';
+        const opt1 = document.createElement('option');
+        opt1.value = "default_es";
+        opt1.textContent = "Voz Predeterminada (Español)";
+        select.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = "default_en";
+        opt2.textContent = "Voz Predeterminada (Inglés)";
+        select.appendChild(opt2);
     }
 
     function filterVoices() {
+        if (allVoices.length === 0) return;
+
         const lang = document.getElementById('langFilter').value;
         const select = document.getElementById('voiceSelect');
         select.innerHTML = '';
@@ -254,11 +282,11 @@ y2k_html_code = """
         const filtered = allVoices.filter(v => lang === 'all' || v.lang.startsWith(lang));
         
         if(filtered.length === 0) {
-            select.innerHTML = '<option>No se encontraron voces para este idioma</option>';
+            select.innerHTML = '<option value="">No hay voces para este idioma</option>';
             return;
         }
 
-        filtered.forEach((voice) => {
+        filtered.forEach((voice, index) => {
             const opt = document.createElement('option');
             opt.value = voice.name;
             opt.textContent = `${voice.name} (${voice.lang})`;
@@ -266,16 +294,19 @@ y2k_html_code = """
         });
     }
 
-    populateVoices();
     if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = populateVoices;
+        speechSynthesis.onvoiceschanged = initVoices;
     }
 
-    // Extracción PDF
+    window.onload = function() {
+        initVoices();
+    };
+
+    // Lectura de PDF
     document.getElementById('pdfInput').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        document.getElementById('textInput').value = "Leyendo archivo PDF...";
+        document.getElementById('textInput').value = "Procesando el archivo PDF...";
         
         try {
             const arrayBuffer = await file.arrayBuffer();
@@ -286,43 +317,79 @@ y2k_html_code = """
                 const content = await page.getTextContent();
                 fullText += `--- Página ${i} ---\n` + content.items.map(item => item.str).join(' ') + '\n\n';
             }
-            document.getElementById('textInput').value = fullText;
+            document.getElementById('textInput').value = fullText.trim();
+            updateStatus("PDF cargado exitosamente.");
         } catch (err) {
-            document.getElementById('textInput').value = "Error al procesar el PDF.";
+            document.getElementById('textInput').value = "Error al leer el PDF.";
+            updateStatus("Error al procesar el documento PDF.");
         }
     });
 
-    // Reproducción TTS
+    // Reproducción
     function speakText() {
-        if (synth.speaking && synth.isPaused) {
-            synth.resume();
+        const text = document.getElementById('textInput').value;
+        if (!text.trim()) {
+            alert("Escribe algo o sube un PDF para poder reproducir.");
             return;
         }
-        synth.cancel();
 
-        const text = document.getElementById('textInput').value;
-        if (!text.trim()) return;
+        // Si estaba pausado, reanudar
+        if (synth.speaking && synth.isPaused) {
+            synth.resume();
+            updateStatus("Reanudando reproducción...");
+            return;
+        }
+
+        synth.cancel(); // Cancelar reproducciones anteriores
 
         const utterance = new SpeechSynthesisUtterance(text);
         const voiceName = document.getElementById('voiceSelect').value;
-        const selectedVoice = allVoices.find(v => v.name === voiceName);
         
-        if (selectedVoice) utterance.voice = selectedVoice;
+        if (voiceName === "default_es") {
+            utterance.lang = "es-ES";
+        } else if (voiceName === "default_en") {
+            utterance.lang = "en-US";
+        } else {
+            const selectedVoice = allVoices.find(v => v.name === voiceName);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+        }
+
         utterance.rate = parseFloat(document.getElementById('rateInput').value);
         utterance.pitch = parseFloat(document.getElementById('pitchInput').value);
+
+        utterance.onstart = function() {
+            updateStatus("🔊 Reproduciendo audio...");
+        };
+
+        utterance.onend = function() {
+            updateStatus("Lectura finalizada.");
+        };
+
+        utterance.onerror = function(e) {
+            updateStatus("Error de reproducción en el navegador. Intenta hacer clic en 'Recargar Voces'.");
+            console.error(e);
+        };
 
         synth.speak(utterance);
     }
 
     function pauseText() {
-        if (synth.speaking) synth.pause();
+        if (synth.speaking && !synth.isPaused) {
+            synth.pause();
+            updateStatus("Reproducción pausada.");
+        }
     }
 
     function stopText() {
-        if (synth.speaking) synth.cancel();
+        if (synth.speaking) {
+            synth.cancel();
+            updateStatus("Reproducción detenida.");
+        }
     }
 
-    // Descarga de Audio WAV Generado
+    // Descarga de Audio WAV
     function downloadWav() {
         const text = document.getElementById('textInput').value;
         if (!text.trim()) {
@@ -330,6 +397,7 @@ y2k_html_code = """
             return;
         }
 
+        updateStatus("Generando archivo .WAV...");
         const sampleRate = 22050;
         const pitch = parseFloat(document.getElementById('pitchInput').value);
         const durationSec = Math.max(2, text.length * 0.08);
@@ -355,6 +423,7 @@ y2k_html_code = """
         a.download = 'bees_to_speech_audio.wav';
         a.click();
         URL.revokeObjectURL(url);
+        updateStatus("Archivo .WAV descargado.");
     }
 
     function createWavHeader(dataSize, sampleRate) {
@@ -389,5 +458,4 @@ y2k_html_code = """
 </html>
 """
 
-# Renderizado dentro del contenedor de Streamlit
-st.components.v1.html(y2k_html_code, height=900, scrolling=True)
+st.components.v1.html(y2k_html_code, height=920, scrolling=True)
