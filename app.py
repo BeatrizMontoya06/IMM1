@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Bee's To Speech v2.0 - Retro Y2K",
+    page_title="Bee's To Speech v2.0 - Fixed Voices",
     page_icon="🐝",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -13,7 +13,7 @@ y2k_html_code = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐝 Bee's To Speech v2.0 - Fix Edition 🐝</title>
+    <title>🐝 Bee's To Speech v2.0 🐝</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -82,7 +82,7 @@ y2k_html_code = """
             background: #fff;
             border: 2px inset #808080;
             font-family: monospace;
-            padding: 4px;
+            padding: 6px;
         }
 
         .btn-group {
@@ -116,7 +116,7 @@ y2k_html_code = """
             padding: 5px;
             font-size: 11px;
             color: #333;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
         .grid-2 {
@@ -138,7 +138,7 @@ y2k_html_code = """
     </div>
 
     <marquee scrollamount="5">
-        *** BIENVENIDO A BEE'S TO SPEECH WEB 2.0 *** SI LAS VOCES NO APARECEN, HAZ CLIC EN 'CARGAR VOCES' ***
+        *** BIENVENIDO A BEE'S TO SPEECH WEB 2.0 *** SELECCIONA UNA VOZ Y PRESIONA REPRODUCIR ***
     </marquee>
 
     <div class="window-body">
@@ -146,7 +146,7 @@ y2k_html_code = """
         <div class="retro-card">
             <h2>ℹ SOBRE LA PLATAFORMA (SYSTEM INFO)</h2>
             <p style="font-size: 12px; margin: 5px 0;">
-                <b>Bee's To Speech v2.0</b> es un sistema de síntesis de voz para archivos PDF y texto plano.
+                <b>Bee's To Speech v2.0</b> es una plataforma para convertir documentos PDF y texto a voz con diferentes idiomas y voces predeterminadas.
             </p>
         </div>
 
@@ -160,34 +160,22 @@ y2k_html_code = """
             <textarea id="textInput" rows="5" placeholder="Escribe tu texto o sube un PDF..."></textarea>
         </div>
 
-        <!-- Controles de Voz -->
+        <!-- Controles de Voz Predeterminados -->
         <div class="retro-card">
-            <h2>🎙️ CONFIGURACIÓN DEL SINTETIZADOR DE VOZ</h2>
+            <h2>🎙️ SELECCIÓN DE VOZ E IDIOMA</h2>
             
-            <div class="grid-2">
-                <div>
-                    <label style="font-size: 11px;"><b>Filtrar Idioma:</b></label>
-                    <select id="langFilter" onchange="filterVoices()">
-                        <option value="all">Todas las voces</option>
-                        <option value="es">Español (es)</option>
-                        <option value="en">Inglés (en)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label style="font-size: 11px;"><b>Seleccionar Voz:</b></label>
-                    <select id="voiceSelect">
-                        <option value="">Buscando voces del sistema...</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style="margin-top: 8px;">
-                <button class="y2k-btn" onclick="initVoices()">🔄 RECARGAR/FORZAR VOCES</button>
+            <div>
+                <label style="font-size: 11px;"><b>Voz / Idioma Predeterminado:</b></label>
+                <select id="voiceSelect">
+                    <option value="es-ES">🇪🇸 Voz en Español (Spanish)</option>
+                    <option value="en-US">🇺🇸 Voz en Inglés (English)</option>
+                    <option value="fr-FR">🇫🇷 Voz en Francés (French)</option>
+                    <option value="it-IT">🇮🇹 Voz en Italiano (Italian)</option>
+                </select>
             </div>
 
             <div class="status-box" id="statusBox">
-                Estado: Esperando interacción con el usuario...
+                Estado: Listo. Selecciona un idioma y presiona Reproducir.
             </div>
 
             <br>
@@ -205,7 +193,7 @@ y2k_html_code = """
             </div>
         </div>
 
-        <!-- Controles de Acción -->
+        <!-- Botones de Acción -->
         <div class="retro-card" style="text-align: center;">
             <div class="btn-group" style="justify-content: center;">
                 <button class="y2k-btn btn-primary" onclick="speakText()">▶️ REPRODUCIR</button>
@@ -219,94 +207,17 @@ y2k_html_code = """
 
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    
-    let synth = window.speechSynthesis;
-    let allVoices = [];
+    const synth = window.speechSynthesis;
 
     function updateStatus(msg) {
         document.getElementById('statusBox').innerText = "Estado: " + msg;
     }
 
-    function initVoices() {
-        if (!('speechSynthesis' in window)) {
-            updateStatus("Tu navegador NO soporta la API de lectura de voz (SpeechSynthesis).");
-            return;
-        }
-
-        allVoices = synth.getVoices();
-
-        if (allVoices.length === 0) {
-            updateStatus("Cargando voces...");
-            // Reintento continuo para navegadores como Chrome/Edge
-            let attempts = 0;
-            let interval = setInterval(() => {
-                allVoices = synth.getVoices();
-                attempts++;
-                if (allVoices.length > 0) {
-                    clearInterval(interval);
-                    filterVoices();
-                    updateStatus("Se encontraron " + allVoices.length + " voces en el sistema.");
-                } else if (attempts > 10) {
-                    clearInterval(interval);
-                    updateStatus("No se detectaron voces locales. Se usarán voces por defecto del navegador al dar clic en Reproducir.");
-                    setupFallbackOptions();
-                }
-            }, 300);
-        } else {
-            filterVoices();
-            updateStatus("Se encontraron " + allVoices.length + " voces en el sistema.");
-        }
-    }
-
-    function setupFallbackOptions() {
-        const select = document.getElementById('voiceSelect');
-        select.innerHTML = '';
-        const opt1 = document.createElement('option');
-        opt1.value = "default_es";
-        opt1.textContent = "Voz Predeterminada (Español)";
-        select.appendChild(opt1);
-
-        const opt2 = document.createElement('option');
-        opt2.value = "default_en";
-        opt2.textContent = "Voz Predeterminada (Inglés)";
-        select.appendChild(opt2);
-    }
-
-    function filterVoices() {
-        if (allVoices.length === 0) return;
-
-        const lang = document.getElementById('langFilter').value;
-        const select = document.getElementById('voiceSelect');
-        select.innerHTML = '';
-
-        const filtered = allVoices.filter(v => lang === 'all' || v.lang.startsWith(lang));
-        
-        if(filtered.length === 0) {
-            select.innerHTML = '<option value="">No hay voces para este idioma</option>';
-            return;
-        }
-
-        filtered.forEach((voice, index) => {
-            const opt = document.createElement('option');
-            opt.value = voice.name;
-            opt.textContent = `${voice.name} (${voice.lang})`;
-            select.appendChild(opt);
-        });
-    }
-
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = initVoices;
-    }
-
-    window.onload = function() {
-        initVoices();
-    };
-
-    // Lectura de PDF
+    // Lectura PDF
     document.getElementById('pdfInput').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        document.getElementById('textInput').value = "Procesando el archivo PDF...";
+        document.getElementById('textInput').value = "Cargando archivo PDF...";
         
         try {
             const arrayBuffer = await file.arrayBuffer();
@@ -321,46 +232,35 @@ y2k_html_code = """
             updateStatus("PDF cargado exitosamente.");
         } catch (err) {
             document.getElementById('textInput').value = "Error al leer el PDF.";
-            updateStatus("Error al procesar el documento PDF.");
+            updateStatus("Error al procesar el archivo PDF.");
         }
     });
 
-    // Reproducción
+    // Reproducción TTS con idioma fijo
     function speakText() {
         const text = document.getElementById('textInput').value;
         if (!text.trim()) {
-            alert("Escribe algo o sube un PDF para poder reproducir.");
+            alert("Escribe un texto o sube un PDF primero.");
             return;
         }
 
-        // Si estaba pausado, reanudar
         if (synth.speaking && synth.isPaused) {
             synth.resume();
             updateStatus("Reanudando reproducción...");
             return;
         }
 
-        synth.cancel(); // Cancelar reproducciones anteriores
+        synth.cancel(); // Limpiar cola previa
 
         const utterance = new SpeechSynthesisUtterance(text);
-        const voiceName = document.getElementById('voiceSelect').value;
+        const selectedLang = document.getElementById('voiceSelect').value;
         
-        if (voiceName === "default_es") {
-            utterance.lang = "es-ES";
-        } else if (voiceName === "default_en") {
-            utterance.lang = "en-US";
-        } else {
-            const selectedVoice = allVoices.find(v => v.name === voiceName);
-            if (selectedVoice) {
-                utterance.voice = selectedVoice;
-            }
-        }
-
+        utterance.lang = selectedLang;
         utterance.rate = parseFloat(document.getElementById('rateInput').value);
         utterance.pitch = parseFloat(document.getElementById('pitchInput').value);
 
         utterance.onstart = function() {
-            updateStatus("🔊 Reproduciendo audio...");
+            updateStatus("🔊 Reproduciendo audio (" + selectedLang + ")...");
         };
 
         utterance.onend = function() {
@@ -368,7 +268,7 @@ y2k_html_code = """
         };
 
         utterance.onerror = function(e) {
-            updateStatus("Error de reproducción en el navegador. Intenta hacer clic en 'Recargar Voces'.");
+            updateStatus("Error en la reproducción de voz.");
             console.error(e);
         };
 
@@ -389,11 +289,11 @@ y2k_html_code = """
         }
     }
 
-    // Descarga de Audio WAV
+    // Generador y Descargador de Audio .WAV
     function downloadWav() {
         const text = document.getElementById('textInput').value;
         if (!text.trim()) {
-            alert('Por favor ingresa un texto antes de generar el audio.');
+            alert('Ingresa texto para generar el audio.');
             return;
         }
 
@@ -423,7 +323,7 @@ y2k_html_code = """
         a.download = 'bees_to_speech_audio.wav';
         a.click();
         URL.revokeObjectURL(url);
-        updateStatus("Archivo .WAV descargado.");
+        updateStatus("Archivo .WAV generado y descargado.");
     }
 
     function createWavHeader(dataSize, sampleRate) {
@@ -458,4 +358,4 @@ y2k_html_code = """
 </html>
 """
 
-st.components.v1.html(y2k_html_code, height=920, scrolling=True)
+st.components.v1.html(y2k_html_code, height=900, scrolling=True)
