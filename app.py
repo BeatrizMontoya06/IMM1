@@ -1,69 +1,64 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bee's To Speech 🐝</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Librería PDF.js para lectura e extracción de texto de los PDFs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🐝 Bee's To Speech</h1>
-            <p class="tagline">Convierte tus PDFs y textos en voz al instante</p>
-        </header>
+import streamlit as st
+import pypdf
 
-        <section class="context-card">
-            <h2>Acerca de esta plataforma</h2>
-            <p>
-                <strong>Bee's To Speech</strong> es una herramienta diseñada para transformar documentos PDF y textos simples en audio fluido mediante síntesis de voz. Selecciona la voz de tu preferencia, ajusta la velocidad y escucha el contenido sin necesidad de instalar software adicional.
-            </p>
-        </section>
+st.set_page_config(page_title="Bee's To Speech 🐝", page_icon="🐝", layout="centered")
 
-        <main class="app-card">
-            <!-- Carga de Archivos -->
-            <div class="control-group">
-                <label for="pdfInput" class="file-label">📄 Cargar archivo PDF</label>
-                <input type="file" id="pdfInput" accept="application/pdf">
-            </div>
+# Estilos personalizados (Temática Bee's)
+st.markdown("""
+    <style>
+    .main { background-color: #fdfbf7; }
+    h1 { color: #1a1a1a; }
+    .stButton>button { background-color: #ffcc00; color: #1a1a1a; font-weight: bold; border-radius: 8px; border: none; }
+    .stButton>button:hover { background-color: #e6b800; }
+    </style>
+""", unsafe_allow_html=True)
 
-            <!-- Área de Texto -->
-            <div class="control-group">
-                <label for="textInput">Texto a reproducir:</label>
-                <textarea id="textInput" rows="8" placeholder="Sube un PDF o escribe aquí el texto que quieres escuchar..."></textarea>
-            </div>
+st.title("🐝 Bee's To Speech")
+st.caption("Convierte tus PDFs y textos en voz al instante")
 
-            <!-- Controles de Voz -->
-            <div class="settings-grid">
-                <div class="control-group">
-                    <label for="voiceSelect">🗣️️ Seleccionar Voz:</label>
-                    <select id="voiceSelect">
-                        <option value="">Cargando voces disponibles...</option>
-                    </select>
-                </div>
+# Contexto de la página
+with st.expander("ℹ️ Acerca de esta plataforma", expanded=True):
+    st.write("""
+        **Bee's To Speech** es una herramienta diseñada para transformar documentos PDF 
+        y textos simples en audio fluido mediante síntesis de voz en el navegador.
+    """)
 
-                <div class="control-group">
-                    <label for="rateInput">⚡ Velocidad: <span id="rateValue">1x</span></label>
-                    <input type="range" id="rateInput" min="0.5" max="2" value="1" step="0.1">
-                </div>
+# Carga de archivo PDF
+uploaded_file = st.file_uploader("📄 Cargar archivo PDF", type=["pdf"])
 
-                <div class="control-group">
-                    <label for="pitchInput">🎵 Tono: <span id="pitchValue">1</span></label>
-                    <input type="range" id="pitchInput" min="0.5" max="1.5" value="1" step="0.1">
-                </div>
-            </div>
+pdf_text = ""
+if uploaded_file is not None:
+    try:
+        reader = pypdf.PdfReader(uploaded_file)
+        for i, page in enumerate(reader.pages):
+            extracted = page.extract_text()
+            if extracted:
+                pdf_text += f"--- Página {i+1} ---\n{extracted}\n\n"
+    except Exception as e:
+        st.error(f"Error al leer el PDF: {e}")
 
-            <!-- Botones de Acción -->
-            <div class="button-group">
-                <button id="playBtn" class="btn primary">▶️ Reproducir</button>
-                <button id="pauseBtn" class="btn secondary">⏸️ Pausar</button>
-                <button id="stopBtn" class="btn danger">⏹️ Detener</button>
-            </div>
-        </main>
-    </div>
+# Área de texto
+text_to_read = st.text_area(
+    "Texto a reproducir:", 
+    value=pdf_text, 
+    height=200, 
+    placeholder="Sube un PDF o escribe aquí el texto..."
+)
 
-    <script src="app.js"></script>
-</body>
-</html>
+# Controles de audio web mediante Web Speech API
+if text_to_read.strip():
+    # Inyectamos el reproductor de voz con JS
+    js_code = f"""
+    <script>
+    function speak() {{
+        const text = `{text_to_read.replace('`', '')}`;
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+    }}
+    </script>
+    <button onclick="speak()" style="background-color: #ffcc00; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer;">
+        ▶️ Escuchar Texto
+    </button>
+    """
+    st.components.v1.html(js_code, height=60)
