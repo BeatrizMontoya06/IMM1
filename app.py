@@ -6,13 +6,13 @@ import io
 
 # Configuración de la página
 st.set_page_config(
-    page_title="Bee's To Speech v2.0 - Retro Y2K",
+    page_title="Bee's To Speech v2.0 - Retro Y2K Edition",
     page_icon="🐝",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Inicializar estados de sesión
+# Inicializar estados en sesión
 if "audio_b64" not in st.session_state:
     st.session_state.audio_b64 = None
 if "audio_bytes" not in st.session_state:
@@ -20,8 +20,66 @@ if "audio_bytes" not in st.session_state:
 if "pdf_text" not in st.session_state:
     st.session_state.pdf_text = ""
 
-# Cabecera Retro Y2K
-y2k_html_header = """
+# Inyección CSS Global para transformar toda la app a estilo Web de los 2000
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+    /* Fondo Turquesa Pixelado */
+    .stApp {
+        background-color: #008080 !important;
+        background-image: 
+            radial-gradient(#40e0d0 15%, transparent 16%),
+            radial-gradient(#004040 15%, transparent 16%) !important;
+        background-size: 16px 16px !important;
+        font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+    }
+
+    /* Estilo de Contenedores y Bloques en Relieve Metalizado (Windows 98) */
+    div[data-testid="stVerticalBlock"] > div {
+        background: #c0c0c0;
+        border: 3px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        padding: 12px;
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+    }
+
+    /* Etiquetas e Identificadores Retro */
+    label, p, h1, h2, h3, span {
+        color: #000000 !important;
+        font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+    }
+
+    /* Campos de Entrada / Carga de Archivo */
+    div[data-baseweb="file-uploader"], textarea, select, div[data-baseweb="select"] {
+        background-color: #ffffff !important;
+        border: 2px inset #808080 !important;
+        font-family: monospace !important;
+        color: #000000 !important;
+    }
+
+    /* Botones estilo Y2K en 3D */
+    .stButton > button, div[data-testid="stDownloadButton"] > button {
+        background: #c0c0c0 !important;
+        color: #000000 !important;
+        border: 2px solid !important;
+        border-color: #ffffff #808080 #808080 #ffffff !important;
+        font-weight: bold !important;
+        font-size: 13px !important;
+        border-radius: 0px !important;
+        cursor: pointer !important;
+        box-shadow: 2px 2px 0px #000000 !important;
+    }
+
+    .stButton > button:active, div[data-testid="stDownloadButton"] > button:active {
+        border-color: #808080 #ffffff #ffffff #808080 !important;
+        box-shadow: inset 1px 1px 0px #000000 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Encabezado Retro Y2K (Barra de Título + Marquesina + Información)
+y2k_header = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,23 +88,10 @@ y2k_html_header = """
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
         body {
-            background-color: #008080;
-            background-image: 
-                radial-gradient(#40e0d0 15%, transparent 16%),
-                radial-gradient(#004040 15%, transparent 16%);
-            background-size: 16px 16px;
             font-family: Tahoma, 'MS Sans Serif', sans-serif;
             margin: 0;
             padding: 0;
-            color: #000;
-        }
-
-        .y2k-container {
-            background: #c0c0c0;
-            border: 3px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            padding: 8px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            background: transparent;
         }
 
         .title-bar {
@@ -60,56 +105,77 @@ y2k_html_header = """
             align-items: center;
         }
 
+        .title-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            font-size: 9px;
+            line-height: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+        }
+
         marquee {
             background: #000;
             color: #00ff00;
             font-family: 'VT323', monospace;
-            font-size: 18px;
+            font-size: 20px;
             padding: 4px;
             border: 2px inset #808080;
             margin: 8px 0;
         }
 
-        .retro-card {
+        .retro-info {
             border: 2px inset #ffffff;
             background: #e0e0e0;
-            padding: 10px;
-            margin-bottom: 12px;
+            padding: 8px;
+            margin-bottom: 8px;
         }
 
-        .retro-card h2 {
-            margin-top: 0;
-            font-size: 14px;
+        .retro-info h2 {
+            margin: 0 0 4px 0;
+            font-size: 13px;
             background: #000080;
             color: #fff;
-            padding: 3px 6px;
+            padding: 2px 6px;
         }
     </style>
 </head>
 <body>
-<div class="y2k-container">
     <div class="title-bar">
         <span>🐝 C:\\BEES_TO_SPEECH\\v2.0\\APP.EXE</span>
+        <div class="title-buttons">
+            <div class="win-btn">_</div>
+            <div class="win-btn">□</div>
+            <div class="win-btn">✕</div>
+        </div>
     </div>
 
     <marquee scrollamount="5">
-        *** BIENVENIDO A BEE'S TO SPEECH WEB 2.0 *** CARGA TU ARCHIVO PDF O ESCRIBE TEXTO Y ESCÚCHALO AL INSTANTE ***
+        *** BIENVENIDO A BEE'S TO SPEECH WEB 2.0 *** LA EXPERIENCIA COMPLETA DE TEXTO Y PDF A VOZ ***
     </marquee>
 
-    <div class="retro-card">
+    <div class="retro-info">
         <h2>ℹ SOBRE LA PLATAFORMA (SYSTEM INFO)</h2>
-        <p style="font-size: 12px; margin: 3px 0;">
-            <b>Bee's To Speech v2.0</b> convierte tus documentos PDF y textos a voz con reproducción automática directa en tu navegador.
+        <p style="font-size: 12px; margin: 2px 0; color: #000;">
+            <b>Bee's To Speech v2.0</b> extrae el texto de tus archivos PDF y los convierte en audio mp3 sintetizado listo para sonar en tu navegador.
         </p>
     </div>
-</div>
 </body>
 </html>
 """
-st.components.v1.html(y2k_html_header, height=190)
+st.components.v1.html(y2k_header, height=185)
 
-# Sección 1: Cargar PDF (Fuera del formulario para procesarlo al instante)
-st.markdown("### 📄 1. Cargar Archivo PDF:")
+# Sección 1: Cargar PDF (Ventana Retro)
+st.markdown("### 📁 1. Cargar Archivo PDF")
 uploaded_file = st.file_uploader(
     "Selecciona un archivo PDF desde tu equipo", 
     type=["pdf"], 
@@ -127,20 +193,20 @@ if uploaded_file is not None:
         st.session_state.pdf_text = text_acc
         st.success("✅ Texto extraído del PDF con éxito.")
     except Exception as e:
-        st.error(f"Error al leer el PDF: {e}")
+        st.error(f"Error al procesar el archivo PDF: {e}")
 
-# Formulario principal de texto y voz
+# Sección 2 y 3: Formulario para Texto, Voz y Reproducción
 with st.form(key="tts_form"):
-    st.markdown("### 📝 2. Editor de Texto / Contenido:")
+    st.markdown("### 📝 2. Editor de Texto / Contenido")
     user_text = st.text_area(
         label="Texto a reproducir",
         value=st.session_state.pdf_text,
-        height=180,
+        height=160,
         placeholder="Escribe tu texto aquí o sube un PDF arriba para extraer su contenido...",
         label_visibility="collapsed"
     )
 
-    st.markdown("### 🎙️ 3. Selecciona la Voz / Idioma:")
+    st.markdown("### 🎙️ 3. Seleccionar Voz e Idioma")
     voice_option = st.selectbox(
         "Voz",
         options=[
@@ -157,12 +223,12 @@ with st.form(key="tts_form"):
 
     submit_button = st.form_submit_button("▶️ REPRODUCIR AUDIO EN LA PÁGINA")
 
-# Generar síntesis de voz al hacer clic
+# Procesamiento de voz en backend
 if submit_button:
     if not user_text.strip():
-        st.warning("⚠️ Escribe un texto o sube un PDF antes de presionar Reproducir.")
+        st.warning("⚠️ Ingresa texto o sube un PDF antes de presionar Reproducir.")
     else:
-        with st.spinner("Generando audio..."):
+        with st.spinner("Sintetizando voz..."):
             try:
                 lang_code = voice_option[1]
                 tld_code = voice_option[2]
@@ -176,14 +242,14 @@ if submit_button:
                 audio_bytes = fp.read()
                 st.session_state.audio_bytes = audio_bytes
                 
-                # Base64 para reproducción con autoplay
+                # Codificación base64 para el reproductor en HTML5
                 b64 = base64.b64encode(audio_bytes).decode()
                 st.session_state.audio_b64 = b64
 
             except Exception as err:
                 st.error(f"Error al generar el audio: {err}")
 
-# Reproductor automático HTML5 + Descarga
+# Reproductor Automático HTML5 con estilo Y2K + Botón para Descargar
 if st.session_state.audio_b64 is not None:
     player_html = f"""
     <!DOCTYPE html>
@@ -193,20 +259,22 @@ if st.session_state.audio_b64 is not None:
             .player-card {{
                 background: #e0e0e0;
                 border: 2px inset #ffffff;
-                padding: 15px;
+                padding: 12px;
                 text-align: center;
                 font-family: Tahoma, sans-serif;
                 margin-top: 10px;
             }}
             audio {{
                 width: 100%;
-                margin-top: 10px;
+                margin-top: 8px;
             }}
             .status {{
                 color: #008000;
                 font-weight: bold;
                 font-size: 13px;
-                margin-bottom: 8px;
+                background: #000;
+                padding: 4px;
+                border: 1px inset #808080;
             }}
         </style>
     </head>
@@ -215,7 +283,7 @@ if st.session_state.audio_b64 is not None:
             <div class="status">🔊 REPRODUCIENDO AUDIO AUTOMÁTICAMENTE...</div>
             <audio controls autoplay>
                 <source src="data:audio/mp3;base64,{st.session_state.audio_b64}" type="audio/mp3">
-                Tu navegador no soporta el reproductor de audio.
+                Tu navegador no soporta la reproducción de audio.
             </audio>
         </div>
     </body>
@@ -224,7 +292,7 @@ if st.session_state.audio_b64 is not None:
     st.components.v1.html(player_html, height=120)
 
     st.download_button(
-        label="💾 DESCARGAR AUDIO (.MP3)",
+        label="💾 DESCARGAR ARCHIVO MP3",
         data=st.session_state.audio_bytes,
         file_name="bees_to_speech.mp3",
         mime="audio/mp3"
